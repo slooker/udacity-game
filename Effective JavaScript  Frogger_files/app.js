@@ -1,31 +1,21 @@
-// Number of rows and columns of the board
 var numRows = 6;
 var numCols = 5;
-// Column height and row width in pixels.  
-// Should probably be called rowHeight and colWidth.  Oh well.
 var rowWidth = 101;
 var colHeight = 83;
-// Offset so that players and enemies aren't hanging off the edge
 var yOffset = 30;
-// Column and row that player starts on
-var playerStartingCol = 2;
-var playerStartingRow = 5;
-// boolean detailing whether a game is currently going
-var gameOn = true;
 
 // Enemies our player must avoid
-var Enemy = function(startingRow) {
+var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    // var column = Math.floor(Math.random() * 3) + 1
-    this.y = colHeight * startingRow - yOffset;
+    this.x = -100;
+    var column = Math.floor(Math.random() * 3) + 1
+    this.y = colHeight * column - yOffset;
 
-    this.x = this.startingX = Math.floor(Math.random() * 1600) * -1;
-    // this.x = 120 + 82 + 82;
     this.speed = Math.floor(Math.random() * 166) + 110;
 }
 
@@ -39,7 +29,7 @@ Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
 
     if (this.x > numCols * rowWidth) 
-        this.x = this.startingX;
+        this.x = Math.floor(Math.random() * 100) - 400;
 }
 
 // Draw the enemy on the screen, required method for game
@@ -52,40 +42,25 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-cat-girl.png';
-    this.col = playerStartingCol;
-    this.row = playerStartingRow;
-    this.lives = 3;
-    this.score = 0;
-}
-
-Player.prototype.resetPosition = function() {
-    this.col = playerStartingCol;
-    this.row = playerStartingRow;
+    this.col = 2;
+    this.row = 5;
 }
 
 Player.prototype.update = function(dt) {
     this.x = this.col * rowWidth;
     this.y = this.row * colHeight - yOffset; // 30 pixel offset so the character isn't teetering on the edge
-    if (player.row === 0) {
-        console.log("Score is incrementing");
-        player.score++;
-        player.resetPosition();
-    }
 }
 
 Player.prototype.handleInput = function(direction) {
-    // Don't allow input if we're game over
-    if (gameOn) {
-        // handle input.  stop at the edge of the screen.  
-        if (direction === 'left' && player.col >= 1)
-            player.col--;
-        if (direction === 'right' && player.col < numCols - 1) 
-            player.col++;
-        if (direction === 'up' && player.row >= 1)
-            player.row--;
-        if (direction === 'down' && player.row < numRows - 1) 
-            player.row++;
-    } 
+    // handle input.  stop at the edge of the screen.  
+    if (direction === 'left' && player.col >= 1)
+        player.col--;
+    if (direction === 'right' && player.col < numCols - 1) 
+        player.col++;
+    if (direction === 'up' && player.row >= 1)
+        player.row--;
+    if (direction === 'down' && player.row < numRows - 1) 
+        player.row++;
 }
 
 Player.prototype.render = function() {
@@ -95,11 +70,7 @@ Player.prototype.render = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = []
-for (var i = 0; i < 12; i++) {
-    allEnemies.push(new Enemy(i % 3 + 1)); 
-}
-// allEnemies.push(new Enemy(3));
+var allEnemies = [new Enemy(), new Enemy, new Enemy()];
 var player = new Player();
 
 // This listens for key presses and sends the keys to your

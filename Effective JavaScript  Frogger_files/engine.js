@@ -80,35 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        checkCollisions();
-    }
-
-    function checkCollisions() {
-        // 82 pixels before or after the x value of the player is a collision
-        allEnemies.forEach(function(enemy) {
-            // Check player.x against enemy.x  if enemy.x is less than player.x
-            // If absolute value of player.x - enemy.x < 82, then it's a hit 
-
-            // if ((enemy.x - enemy.speed < player.x < enemy.x + enemy.speed) && enemy.y == player.y) {
-                // console.log("DEAD!");
-            // }
-            if ((Math.abs(enemy.x - player.x) < 82) && enemy.y === player.y) {
-                console.log("It's a hit!");
-                player.col = playerStartingCol;
-                player.row = playerStartingRow; 
-
-                console.log("removing a player life");
-                player.lives--;
-                player.resetPosition();
-                if (player.lives < 0) {
-                    gameOn = false;
-                }
-            } else {
-
-            }
-        });
-
-
+        // checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -149,12 +121,10 @@ var Engine = (function(global) {
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        if (gameOn) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-            for (row = 0; row < numRows; row++) {
-                for (col = 0; col < numCols; col++) {
+        for (row = 0; row < numRows; row++) {
+            for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate
                  * to start drawing and the y coordinate to start drawing.
@@ -164,23 +134,12 @@ var Engine = (function(global) {
                  */
                  // Not sure why rowWidth and colHeight are reversed here, but it doesn't work
                  // any other way.
-                 ctx.drawImage(Resources.get(rowImages[row]), col * rowWidth, row * colHeight); 
-             }
-         } 
-         ctx.font = "30px Comic Sans";
-         ctx.fillText("Lives: "+player.lives, 10, 30);
-         ctx.fillText("Score: "+player.score, 200, 30);
-         renderEntities();
-
-        } else {
-            ctx.font = "48px Comic Sans";
-            ctx.strokeStyle = "red";
-            ctx.fillStyle = "black";
-            ctx.fillText("Game Over, Man!", 80, canvas.height/2);
-            ctx.strokeText("Game Over, Man!", 80, canvas.height/2);
-
+                ctx.drawImage(Resources.get(rowImages[row]), col * rowWidth, row * colHeight); 
+            }
         }
 
+
+        renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
